@@ -23,12 +23,12 @@
   },
   "autoload": {
     "psr-4": {
-      "Zwo3\\Indexer\\": "Classes/"
+      "Zwo3\\MaskKesearchIndexer\\": "Classes/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Zwo3\\Indexer\\Tests\\": "Tests"
+      "Zwo3\\MaskKesearchIndexer\\Tests\\": "Tests/"
     }
   }
 }
