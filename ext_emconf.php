@@ -1,6 +1,6 @@
 
 <?php
-$EM_CONF[$_EXTKEY] = array(
+$EM_CONF['mask_kesearch_indexer'] = array(
     'title' => 'Faceted Search Hook for Mask Elements',
     'description' => 'Hooks for Mask Elements, both tt_content columns and tx_mask-tables',
     'category' => 'backend',

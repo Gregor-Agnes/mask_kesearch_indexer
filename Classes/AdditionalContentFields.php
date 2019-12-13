@@ -21,6 +21,7 @@
 
 namespace Zwo3\MaskKesearchIndexer;
 
+use Doctrine\DBAL\FetchMode;
 use mysql_xdevapi\DatabaseObject;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
@@ -32,16 +33,33 @@ use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 class AdditionalContentFields
 {
 
+    /**
+     * @var string
+     */
+    public $maskColumns = '';
+
+    public function __construct()
+    {
+        $this->maskColumns = $this->getMaskFieldFromTtContent();
+    }
+
     public function modifyPageContentFields(&$fields, $pageIndexer)
     {
         // Add the field "subheader" from the tt_content table, which is normally not indexed, to the list of fields.
-        $fields .= ",subheader";
+        if ($this->maskColumns) {
+            $fields .= "," . $this->maskColumns;
+        }
     }
 
     public function modifyContentFromContentElement(string &$bodytext, array $ttContentRow, $pageIndexer)
     {
+       if ($this->maskColumns) {
+           $columns = explode(',', $this->maskColumns);
+           foreach ($columns as $column) {
+               $bodytext .= strip_tags($ttContentRow[$column]);
+           }
+       }
         // Add the content of the field "subheader" to $bodytext, which is, what will be saved to the index.
-        $bodytext .= strip_tags($ttContentRow['subheader']);
     }
 
     private function getMaskFieldFromTtContent()
@@ -49,14 +67,19 @@ class AdditionalContentFields
         $link = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getConnectionForTable('sys_log');
 
-        DebuggerUtility::var_dump(GeneralUtility::getIndpEnv($link->getDatabase())); exit;
-        $sql = "SELECT COLUMN_NAME
+        $sql = "SELECT GROUP_CONCAT(COLUMN_NAME) as columns
     FROM INFORMATION_SCHEMA.COLUMNS
     WHERE table_name = 'tt_content'
-    AND table_schema = 'YourDB'
-    AND column_name LIKE 'tx_mask_%'";
+    AND table_schema = '" . $link->getDatabase() . "'
+    AND column_name LIKE 'tx_mask_%'
+    GROUP BY table_name
+    ";
 
         $statement = $link->prepare($sql);
         $statement->execute();
+
+        while ($row = $statement->fetch(FetchMode::ASSOCIATIVE)) {
+            return $row['columns'];
+        }
     }
 }
