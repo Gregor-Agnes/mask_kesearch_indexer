@@ -1,0 +1,34 @@
+{
+  "name": "zwo3/mask_kesearch_indexer",
+  "type": "typo3-cms-extension",
+  "description": "ke_search Indexer for all Mask-Elements",
+  "keywords": [
+    "TYPO3",
+    "extension",
+    "ke_search",
+    "mask",
+    "indexer"
+  ],
+  "homepage": "https://gitlab.com/GregAg/mask-ke_search-indexer",
+  "license": ["GPL-2.0-or-later"],
+  "require": {
+    "typo3/cms-core": "^9.5",
+    "typo3/cms-seo": "^9.5"
+  },
+  "suggest": {
+    "typo3/scheduler": "^9.5"
+  },
+  "replace": {
+    "cs_seo": "self.version"
+  },
+  "autoload": {
+    "psr-4": {
+      "Zwo3\\Indexer\\": "Classes/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Zwo3\\Indexer\\Tests\\": "Tests"
+    }
+  }
+}
