@@ -19,7 +19,7 @@
     "typo3/scheduler": "^9.5"
   },
   "replace": {
-    "mask_kesearch_indexer": "self.version"
+    "zwo3/mask_kesearch_indexer": "self.version"
   },
   "autoload": {
     "psr-4": {
