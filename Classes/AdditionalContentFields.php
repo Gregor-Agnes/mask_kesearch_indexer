@@ -18,7 +18,6 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-
 namespace Zwo3\MaskKesearchIndexer;
 
 use Doctrine\DBAL\FetchMode;
@@ -54,29 +53,26 @@ class AdditionalContentFields
 
     public function modifyContentFromContentElement(string &$bodytext, array $ttContentRow, $pageIndexer)
     {
-       if ($this->maskColumns) {
-           $columns = explode(',', $this->maskColumns);
-           foreach ($columns as $column) {
-               if (!is_numeric($ttContentRow[$column])) {
-                   // add the content to bodytext
-                   $bodytext .= strip_tags($ttContentRow[$column]);
-               } elseif ($ttContentRow[$column] ) {
-                   // index the dependent table
+        if ($this->maskColumns) {
+            $columns = explode(',', $this->maskColumns);
+            foreach ($columns as $column) {
+                if (!is_numeric($ttContentRow[$column])) {
+                    // add the content to bodytext
+                    $bodytext .= strip_tags($ttContentRow[$column]);
+                } elseif ($ttContentRow[$column]) {
+                    // index the dependent table
 
-                   $bodytext .= 'hallohallo';
-                   $maskColumnsOfDependentTable = explode(',', $this->getMaskFieldsFromTable($column));
-                   if ($maskColumnsOfDependentTable) {
-                       $bodytext .= 'yes';
+                    $maskColumnsOfDependentTable = explode(',', $this->getMaskFieldsFromTable($column));
+                    if ($maskColumnsOfDependentTable) {
                         $bodytext = $this->getContentFromMaskFields($ttContentRow['pid'], $column, $maskColumnsOfDependentTable);
-
-                   }
-               }
-           }
-       }
+                    }
+                }
+            }
+        }
     }
 
-
-    private function getContentFromMaskFields($pid, $table, $columns) {
+    private function getContentFromMaskFields($pid, $table, $columns)
+    {
 
         $queryBuilder = Db::getQueryBuilder($table);
         //$queryBuilder->getRestrictions()->removeAll();
@@ -84,9 +80,10 @@ class AdditionalContentFields
             ->select(...$columns)
             ->from($table)
             ->where(
-                $queryBuilder->expr()->eq(
-                    'pid', $queryBuilder->createNamedParameter($pid)
-                )
+                $queryBuilder->expr()
+                    ->eq(
+                        'pid', $queryBuilder->createNamedParameter($pid)
+                    )
             )
             ->execute();
 
