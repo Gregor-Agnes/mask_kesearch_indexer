@@ -21,14 +21,9 @@
 namespace Zwo3\MaskKesearchIndexer;
 
 use Doctrine\DBAL\FetchMode;
-use mysql_xdevapi\DatabaseObject;
 use TeaminmediasPluswerk\KeSearch\Lib\Db;
 use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
-use TYPO3\CMS\Core\Database\Query\Restriction\HiddenRestriction;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 class AdditionalContentFields
 {
@@ -40,12 +35,13 @@ class AdditionalContentFields
 
     public function __construct()
     {
+        // get the mask fields (columns) from tt_content
         $this->maskColumns = $this->getMaskFieldsFromTable();
     }
 
     public function modifyPageContentFields(&$fields, $pageIndexer)
     {
-        // Add the field "subheader" from the tt_content table, which is normally not indexed, to the list of fields.
+        // Add the mask fields from the tt_content table to the list of fields.
         if ($this->maskColumns) {
             $fields .= "," . $this->maskColumns;
         }
@@ -60,8 +56,7 @@ class AdditionalContentFields
                     // add the content to bodytext
                     $bodytext .= strip_tags($ttContentRow[$column]);
                 } elseif ($ttContentRow[$column]) {
-                    // index the dependent table
-
+                    // it's a dependend table , index the columns from the dependent table
                     $maskColumnsOfDependentTable = explode(',', $this->getMaskFieldsFromTable($column));
                     if ($maskColumnsOfDependentTable) {
                         $bodytext = $this->getContentFromMaskFields($ttContentRow['pid'], $column, $maskColumnsOfDependentTable);
@@ -75,7 +70,6 @@ class AdditionalContentFields
     {
 
         $queryBuilder = Db::getQueryBuilder($table);
-        //$queryBuilder->getRestrictions()->removeAll();
         $pageQuery = $queryBuilder
             ->select(...$columns)
             ->from($table)

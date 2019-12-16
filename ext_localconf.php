@@ -19,9 +19,6 @@
 if (!defined("TYPO3_MODE")) {
     die("Access denied.");
 }
-// Register custom indexer hook.
-// Adjust this to your namespace and class name.
-// Adjust the autoloading information in composer.json, too!
 
 // Register hooks for indexing additional fields.
 $additionContentClassName = 'Zwo3\MaskKesearchIndexer\AdditionalContentFields';
