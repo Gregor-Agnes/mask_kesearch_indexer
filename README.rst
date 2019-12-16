@@ -16,4 +16,4 @@ Just install. It hooks up in page-/content-indexer.
 
 Add your mask content to the content elements, which should be indexed in the indexer config.
 
-.. image:: Resources/Public/addMaskContent.png
+.. image:: https://gitlab.com/GregAg/mask-ke_search-indexer/raw/master/Resources/Public/addMaskContent.png
