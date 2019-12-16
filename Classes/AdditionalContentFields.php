@@ -23,6 +23,7 @@ namespace Zwo3\MaskKesearchIndexer;
 
 use Doctrine\DBAL\FetchMode;
 use mysql_xdevapi\DatabaseObject;
+use TeaminmediasPluswerk\KeSearch\Lib\Db;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Database\Query\Restriction\HiddenRestriction;
@@ -40,7 +41,7 @@ class AdditionalContentFields
 
     public function __construct()
     {
-        $this->maskColumns = $this->getMaskFieldFromTtContent();
+        $this->maskColumns = $this->getMaskFieldsFromTable();
     }
 
     public function modifyPageContentFields(&$fields, $pageIndexer)
@@ -56,20 +57,57 @@ class AdditionalContentFields
        if ($this->maskColumns) {
            $columns = explode(',', $this->maskColumns);
            foreach ($columns as $column) {
-               $bodytext .= strip_tags($ttContentRow[$column]);
+               if (!is_numeric($ttContentRow[$column])) {
+                   // add the content to bodytext
+                   $bodytext .= strip_tags($ttContentRow[$column]);
+               } elseif ($ttContentRow[$column] ) {
+                   // index the dependent table
+
+                   $bodytext .= 'hallohallo';
+                   $maskColumnsOfDependentTable = explode(',', $this->getMaskFieldsFromTable($column));
+                   if ($maskColumnsOfDependentTable) {
+                       $bodytext .= 'yes';
+                        $bodytext = $this->getContentFromMaskFields($ttContentRow['pid'], $column, $maskColumnsOfDependentTable);
+
+                   }
+               }
            }
        }
-        // Add the content of the field "subheader" to $bodytext, which is, what will be saved to the index.
     }
 
-    private function getMaskFieldFromTtContent()
+
+    private function getContentFromMaskFields($pid, $table, $columns) {
+
+        $queryBuilder = Db::getQueryBuilder($table);
+        //$queryBuilder->getRestrictions()->removeAll();
+        $pageQuery = $queryBuilder
+            ->select(...$columns)
+            ->from($table)
+            ->where(
+                $queryBuilder->expr()->eq(
+                    'pid', $queryBuilder->createNamedParameter($pid)
+                )
+            )
+            ->execute();
+
+        $bodytext = '';
+        while ($row = $pageQuery->fetch()) {
+            foreach ($row as $content) {
+                $bodytext .= strip_tags($content);
+            }
+        }
+
+        return $bodytext;
+    }
+
+    private function getMaskFieldsFromTable($table = 'tt_content')
     {
         $link = GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getConnectionForTable('sys_log');
+            ->getConnectionForTable($table);
 
         $sql = "SELECT GROUP_CONCAT(COLUMN_NAME) as columns
     FROM INFORMATION_SCHEMA.COLUMNS
-    WHERE table_name = 'tt_content'
+    WHERE table_name = '" . $table . "'
     AND table_schema = '" . $link->getDatabase() . "'
     AND column_name LIKE 'tx_mask_%'
     GROUP BY table_name

@@ -22,9 +22,7 @@ if (!defined("TYPO3_MODE")) {
 // Register custom indexer hook.
 // Adjust this to your namespace and class name.
 // Adjust the autoloading information in composer.json, too!
-$customIndexerClassName = 'Zwo3\MaskKesearchIndexer\MaskIndexer';
-$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_search']['registerIndexerConfiguration'][] = $customIndexerClassName;
-$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_search']['customIndexer'][] = $customIndexerClassName;
+
 // Register hooks for indexing additional fields.
 $additionContentClassName = 'Zwo3\MaskKesearchIndexer\AdditionalContentFields';
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_search']['modifyPageContentFields'][] = $additionContentClassName;
