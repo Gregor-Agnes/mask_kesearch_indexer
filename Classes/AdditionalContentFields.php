@@ -24,6 +24,7 @@ use Doctrine\DBAL\FetchMode;
 use TeaminmediasPluswerk\KeSearch\Lib\Db;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 class AdditionalContentFields
 {
@@ -55,9 +56,9 @@ class AdditionalContentFields
                 if (!is_numeric($ttContentRow[$column])) {
                     // add the content to bodytext
                     $bodytext .= strip_tags($ttContentRow[$column]);
-                } elseif ($ttContentRow[$column]) {
-                    // it's a dependend table , index the columns from the dependent table
-                    $maskColumnsOfDependentTable = explode(',', $this->getMaskFieldsFromTable($column));
+                } elseif ($ttContentRow[$column] && is_array($ttContentRow)) {
+                    // it's a dependend table, index the columns from the dependent table
+                    $maskColumnsOfDependentTable = preg_split('/,/', $this->getMaskFieldsFromTable($column), null, PREG_SPLIT_NO_EMPTY);
                     if ($maskColumnsOfDependentTable) {
                         $bodytext = $this->getContentFromMaskFields($ttContentRow['pid'], $column, $maskColumnsOfDependentTable);
                     }
@@ -67,9 +68,7 @@ class AdditionalContentFields
     }
 
     private function getContentFromMaskFields($pid, $table, $columns)
-    {
-
-        $queryBuilder = Db::getQueryBuilder($table);
+    {$queryBuilder = Db::getQueryBuilder($table);
         $pageQuery = $queryBuilder
             ->select(...$columns)
             ->from($table)
