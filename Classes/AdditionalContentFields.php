@@ -26,6 +26,11 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
+/**
+ * Class AdditionalContentFields
+ *
+ * @package Zwo3\MaskKesearchIndexer
+ */
 class AdditionalContentFields
 {
 
@@ -34,12 +39,19 @@ class AdditionalContentFields
      */
     public $maskColumns = '';
 
+    /**
+     * AdditionalContentFields constructor.
+     */
     public function __construct()
     {
         // get the mask fields (columns) from tt_content
         $this->maskColumns = $this->getMaskFieldsFromTable();
     }
 
+    /**
+     * @param string $fields
+     * @param \TeaminmediasPluswerk\KeSearch\Indexer\Types\Page $pageIndexer
+     */
     public function modifyPageContentFields(&$fields, $pageIndexer)
     {
         // Add the mask fields from the tt_content table to the list of fields.
@@ -48,6 +60,11 @@ class AdditionalContentFields
         }
     }
 
+    /**
+     * @param string $bodytext
+     * @param array $ttContentRow
+     * @param \TeaminmediasPluswerk\KeSearch\Indexer\Types\Page $pageIndexer
+     */
     public function modifyContentFromContentElement(string &$bodytext, array $ttContentRow, $pageIndexer)
     {
         if ($this->maskColumns) {
@@ -67,6 +84,12 @@ class AdditionalContentFields
         }
     }
 
+    /**
+     * @param int $pid
+     * @param string $table
+     * @param arry $columns
+     * @return string
+     */
     private function getContentFromMaskFields($pid, $table, $columns)
     {$queryBuilder = Db::getQueryBuilder($table);
         $pageQuery = $queryBuilder
@@ -90,6 +113,11 @@ class AdditionalContentFields
         return $bodytext;
     }
 
+    /**
+     * @param string $table
+     * @return string
+     * @throws \Doctrine\DBAL\DBALException
+     */
     private function getMaskFieldsFromTable($table = 'tt_content')
     {
         $link = GeneralUtility::makeInstance(ConnectionPool::class)
