@@ -12,8 +12,8 @@
   "homepage": "https://gitlab.com/GregAg/mask-ke_search-indexer",
   "license": ["GPL-2.0-or-later"],
   "require": {
-    "typo3/cms-core": "^9.5",
-    "teaminmedias-pluswerk/ke_search": "^3.0.6",
+    "typo3/cms-core": "^9.5 || ^10.4.2",
+    "teaminmedias-pluswerk/ke_search": "^3.1.0",
     "mask/mask": "^4.1.2"
   },
   "suggest": {
