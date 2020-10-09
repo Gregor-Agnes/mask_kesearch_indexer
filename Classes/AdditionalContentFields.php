@@ -125,6 +125,10 @@ class AdditionalContentFields
     {
         $link = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getConnectionForTable($table);
+        
+        $increaseGroupConcatSql= 'SET SESSION group_concat_max_len = 1000000';
+        $statement = $link->prepare($increaseGroupConcatSql);
+        $statement->execute();
 
         $sql = "SELECT GROUP_CONCAT(COLUMN_NAME) as columns
     FROM INFORMATION_SCHEMA.COLUMNS
