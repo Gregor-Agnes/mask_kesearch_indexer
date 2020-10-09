@@ -14,7 +14,7 @@ $EM_CONF['mask_kesearch_indexer'] = array(
         'depends' => array(
             'typo3' => '9.5.0-10.4.99',
             'mask' => '4.1.2-5.99.99',
-            'ke_search' => '3.1.0-3.1.99',
+            'ke_search' => '3.1.0-3.2.99',
         ),
         'conflicts' => array(),
         'suggests' => array(),
