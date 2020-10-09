@@ -106,6 +106,9 @@ class AdditionalContentFields
         $bodytext = '';
         while ($row = $pageQuery->fetch()) {
             foreach ($row as $content) {
+                if (!empty($bodytext) && !empty($content)) {
+                    $bodytext .= ' ';
+                }
                 $bodytext .= strip_tags($content);
             }
         }
