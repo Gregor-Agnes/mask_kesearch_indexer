@@ -9,15 +9,11 @@
     "mask",
     "indexer"
   ],
-  "homepage": "https://gitlab.com/GregAg/mask-ke_search-indexer",
   "license": ["GPL-2.0-or-later"],
   "require": {
     "typo3/cms-core": "^9.5.26 || ^10.4.14",
     "teaminmedias-pluswerk/ke_search": "^3.6.0",
-    "mask/mask": "^4.2 || ^6.6.0"
-  },
-  "suggest": {
-    "typo3/scheduler": "^9.5"
+    "mask/mask": "^4.2 || ^6.6.0 || ^7.0"
   },
   "replace": {
     "zwo3/mask_kesearch_indexer": "self.version"
