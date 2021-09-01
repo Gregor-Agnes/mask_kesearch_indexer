@@ -15,9 +15,6 @@
     "teaminmedias-pluswerk/ke_search": "^3.6.0",
     "mask/mask": "^4.2 || ^6.6.0 || ^7.0"
   },
-  "replace": {
-    "zwo3/mask_kesearch_indexer": "self.version"
-  },
   "autoload": {
     "psr-4": {
       "Zwo3\\MaskKesearchIndexer\\": "Classes/"
@@ -26,6 +23,11 @@
   "autoload-dev": {
     "psr-4": {
       "Zwo3\\MaskKesearchIndexer\\Tests\\": "Tests/"
+    }
+  },
+  "extra": {
+    "typo3/cms": {
+      "extension-key": "mask_kesearch_indexer"
     }
   }
 }
