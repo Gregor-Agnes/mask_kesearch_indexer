@@ -21,7 +21,7 @@
 namespace Zwo3\MaskKesearchIndexer;
 
 use Doctrine\DBAL\FetchMode;
-use TeaminmediasPluswerk\KeSearch\Lib\Db;
+use Tpwd\KeSearch\Lib\Db;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
@@ -50,7 +50,7 @@ class AdditionalContentFields
 
     /**
      * @param string $fields
-     * @param \TeaminmediasPluswerk\KeSearch\Indexer\Types\Page $pageIndexer
+     * @param \Tpwd\KeSearch\Indexer\Types\Page $pageIndexer
      */
     public function modifyPageContentFields(&$fields, $pageIndexer)
     {
@@ -63,7 +63,7 @@ class AdditionalContentFields
     /**
      * @param string $bodytext
      * @param array $ttContentRow
-     * @param \TeaminmediasPluswerk\KeSearch\Indexer\Types\Page $pageIndexer
+     * @param \Tpwd\KeSearch\Indexer\Types\Page $pageIndexer
      */
     public function modifyContentFromContentElement(string &$bodytext, array $ttContentRow, $pageIndexer)
     {
