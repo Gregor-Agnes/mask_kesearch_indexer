@@ -12,7 +12,7 @@
   "license": ["GPL-2.0-or-later"],
   "require": {
     "typo3/cms-core": "^11.5.0",
-    "tpwd/ke_search": "v4.2.0",
+    "tpwd/ke_search": "^v4.2.0",
     "mask/mask": "^v7.0.21"
   },
   "autoload": {
