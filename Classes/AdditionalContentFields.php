@@ -77,7 +77,7 @@ class AdditionalContentFields
                     // it's a dependend table, index the columns from the dependent table
                     $maskColumnsOfDependentTable = preg_split('/,/', $this->getMaskFieldsFromTable($column), null, PREG_SPLIT_NO_EMPTY);
                     if ($maskColumnsOfDependentTable) {
-                        $bodytext = $this->getContentFromMaskFields($ttContentRow['pid'], $column, $maskColumnsOfDependentTable);
+                        $bodytext = $this->getContentFromMaskFields($ttContentRow['pid'], $column, $maskColumnsOfDependentTable, $ttContentRow['sys_language_uid']);
                     }
                 }
             }
@@ -90,7 +90,7 @@ class AdditionalContentFields
      * @param arry $columns
      * @return string
      */
-    private function getContentFromMaskFields($pid, $table, $columns)
+    private function getContentFromMaskFields($pid, $table, $columns, $sys_language_uid)
     {$queryBuilder = Db::getQueryBuilder($table);
         $pageQuery = $queryBuilder
             ->select(...$columns)
@@ -99,6 +99,10 @@ class AdditionalContentFields
                 $queryBuilder->expr()
                     ->eq(
                         'pid', $queryBuilder->createNamedParameter($pid)
+                    ),
+                $queryBuilder->expr()
+                    ->eq(
+                        'sys_language_uid', $queryBuilder->createNamedParameter($sys_language_uid)
                     )
             )
             ->execute();
