@@ -71,7 +71,7 @@ class AdditionalContentFields
         if ($this->maskColumns) {
             $columns = explode(',', $this->maskColumns);
             foreach ($columns as $column) {
-                if (!is_numeric($ttContentRow[$column])) {
+                if (!is_numeric($ttContentRow[$column]) && $ttContentRow[$column]) {
                     // add the content to bodytext
                     $bodytext .= strip_tags($ttContentRow[$column]);
                 } elseif ($ttContentRow[$column] && is_array($ttContentRow)) {
@@ -125,23 +125,23 @@ class AdditionalContentFields
     {
         $link = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getConnectionForTable($table);
-        
+
         $increaseGroupConcatSql= 'SET SESSION group_concat_max_len = 1000000';
         $statement = $link->prepare($increaseGroupConcatSql);
         $statement->execute();
 
         $sql = "SELECT GROUP_CONCAT(COLUMN_NAME) as columns
-    FROM INFORMATION_SCHEMA.COLUMNS
-    WHERE table_name = '" . $table . "'
-    AND table_schema = '" . $link->getDatabase() . "'
-    AND column_name LIKE 'tx_mask_%'
-    GROUP BY table_name
-    ";
+                FROM INFORMATION_SCHEMA.COLUMNS
+                WHERE table_name = '" . $table . "'
+                AND table_schema = '" . $link->getDatabase() . "'
+                AND column_name LIKE 'tx_mask_%'
+                GROUP BY table_name
+                ";
 
         $statement = $link->prepare($sql);
-        $statement->execute();
+        $result = $statement->execute();
 
-        while ($row = $statement->fetch(FetchMode::ASSOCIATIVE)) {
+        while ($row = $result->fetchAssociative()) {
             return $row['columns'];
         }
     }
