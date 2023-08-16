@@ -1,11 +1,9 @@
-
 <?php
 $EM_CONF['mask_kesearch_indexer'] = array(
     'title' => 'KeSearch Indexer for Mask Elements',
     'description' => 'Indexer for mask elements, both tt_content columns and tx_mask-tables.',
     'category' => 'backend',
     'version' => '2.2.1',
-    'dependencies' => 'ke_search, mask',
     'state' => 'stable',
     'author' => 'Gregor Agnes',
     'author_email' => 'ga@zwo3.de',

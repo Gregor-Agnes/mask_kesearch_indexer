@@ -20,6 +20,7 @@
 
 namespace Zwo3\MaskKesearchIndexer;
 
+use Tpwd\KeSearch\Indexer\Types\Page;
 use Doctrine\DBAL\FetchMode;
 use Tpwd\KeSearch\Lib\Db;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -50,7 +51,7 @@ class AdditionalContentFields
 
     /**
      * @param string $fields
-     * @param \Tpwd\KeSearch\Indexer\Types\Page $pageIndexer
+     * @param Page $pageIndexer
      */
     public function modifyPageContentFields(&$fields, $pageIndexer)
     {
@@ -63,7 +64,7 @@ class AdditionalContentFields
     /**
      * @param string $bodytext
      * @param array $ttContentRow
-     * @param \Tpwd\KeSearch\Indexer\Types\Page $pageIndexer
+     * @param Page $pageIndexer
      */
     public function modifyContentFromContentElement(string &$bodytext, array $ttContentRow, $pageIndexer)
     {
@@ -94,18 +95,13 @@ class AdditionalContentFields
     {$queryBuilder = Db::getQueryBuilder($table);
         $pageQuery = $queryBuilder
             ->select(...$columns)
-            ->from($table)
-            ->where(
-                $queryBuilder->expr()
-                    ->eq(
-                        'pid', $queryBuilder->createNamedParameter($pid)
-                    ),
-                $queryBuilder->expr()
-                    ->eq(
-                        'sys_language_uid', $queryBuilder->createNamedParameter($sys_language_uid)
-                    )
-            )
-            ->execute();
+            ->from($table)->where($queryBuilder->expr()
+            ->eq(
+                'pid', $queryBuilder->createNamedParameter($pid)
+            ), $queryBuilder->expr()
+            ->eq(
+                'sys_language_uid', $queryBuilder->createNamedParameter($sys_language_uid)
+            ))->executeQuery();
 
         $bodytext = '';
         while ($row = $pageQuery->fetch()) {
