@@ -12,9 +12,9 @@ $EM_CONF['mask_kesearch_indexer'] = array(
     'author_company' => 'zwo3',
     'constraints' => array(
         'depends' => array(
-            'typo3' => '11.5.0-11.5.99',
-            'mask' => '7.0.21-7.0.99',
-            'ke_search' => '4.2.0-4.9.99',
+            'typo3' => '11.5.0-12.4.99',
+            'mask' => '7.0.21-8.9.99',
+            'ke_search' => '4.2.0-5.9.99',
         ),
         'conflicts' => array(),
         'suggests' => array(),
