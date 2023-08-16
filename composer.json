@@ -12,8 +12,8 @@
   "license": ["GPL-2.0-or-later"],
   "require": {
     "typo3/cms-core": "^11.5.0 || ^12.4.0",
-    "tpwd/ke_search": "^v4.2.0",
-    "mask/mask": "^v7.0.21"
+    "tpwd/ke_search": "^4.2.0 || ^5.0",
+    "mask/mask": "^7.0.21 || ^8.2"
   },
   "autoload": {
     "psr-4": {
