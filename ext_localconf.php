@@ -16,11 +16,11 @@
  *  GNU General Public License for more details.
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-if (!defined("TYPO3_MODE")) {
+if (!defined('TYPO3')) {
     die("Access denied.");
 }
 
 // Register hooks for indexing additional fields.
-$additionContentClassName = 'Zwo3\MaskKesearchIndexer\AdditionalContentFields';
+$additionContentClassName = \Zwo3\MaskKesearchIndexer\AdditionalContentFields::class;
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_search']['modifyPageContentFields'][] = $additionContentClassName;
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_search']['modifyContentFromContentElement'][] = $additionContentClassName;

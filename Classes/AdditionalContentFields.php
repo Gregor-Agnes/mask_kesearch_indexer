@@ -20,6 +20,7 @@
 
 namespace Zwo3\MaskKesearchIndexer;
 
+use Tpwd\KeSearch\Indexer\Types\Page;
 use Doctrine\DBAL\FetchMode;
 use Tpwd\KeSearch\Lib\Db;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -50,7 +51,7 @@ class AdditionalContentFields
 
     /**
      * @param string $fields
-     * @param \Tpwd\KeSearch\Indexer\Types\Page $pageIndexer
+     * @param Page $pageIndexer
      */
     public function modifyPageContentFields(&$fields, $pageIndexer)
     {
@@ -63,14 +64,14 @@ class AdditionalContentFields
     /**
      * @param string $bodytext
      * @param array $ttContentRow
-     * @param \Tpwd\KeSearch\Indexer\Types\Page $pageIndexer
+     * @param Page $pageIndexer
      */
     public function modifyContentFromContentElement(string &$bodytext, array $ttContentRow, $pageIndexer)
     {
         if ($this->maskColumns) {
             $columns = explode(',', $this->maskColumns);
             foreach ($columns as $column) {
-                if (!is_numeric($ttContentRow[$column])) {
+                if (!is_numeric($ttContentRow[$column]) && $ttContentRow[$column]) {
                     // add the content to bodytext
                     $bodytext .= strip_tags($ttContentRow[$column]);
                 } elseif ($ttContentRow[$column] && is_array($ttContentRow)) {
@@ -94,18 +95,13 @@ class AdditionalContentFields
     {$queryBuilder = Db::getQueryBuilder($table);
         $pageQuery = $queryBuilder
             ->select(...$columns)
-            ->from($table)
-            ->where(
-                $queryBuilder->expr()
-                    ->eq(
-                        'pid', $queryBuilder->createNamedParameter($pid)
-                    ),
-                $queryBuilder->expr()
-                    ->eq(
-                        'sys_language_uid', $queryBuilder->createNamedParameter($sys_language_uid)
-                    )
-            )
-            ->execute();
+            ->from($table)->where($queryBuilder->expr()
+            ->eq(
+                'pid', $queryBuilder->createNamedParameter($pid)
+            ), $queryBuilder->expr()
+            ->eq(
+                'sys_language_uid', $queryBuilder->createNamedParameter($sys_language_uid)
+            ))->executeQuery();
 
         $bodytext = '';
         while ($row = $pageQuery->fetch()) {
@@ -129,23 +125,23 @@ class AdditionalContentFields
     {
         $link = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getConnectionForTable($table);
-        
+
         $increaseGroupConcatSql= 'SET SESSION group_concat_max_len = 1000000';
         $statement = $link->prepare($increaseGroupConcatSql);
         $statement->execute();
 
         $sql = "SELECT GROUP_CONCAT(COLUMN_NAME) as columns
-    FROM INFORMATION_SCHEMA.COLUMNS
-    WHERE table_name = '" . $table . "'
-    AND table_schema = '" . $link->getDatabase() . "'
-    AND column_name LIKE 'tx_mask_%'
-    GROUP BY table_name
-    ";
+                FROM INFORMATION_SCHEMA.COLUMNS
+                WHERE table_name = '" . $table . "'
+                AND table_schema = '" . $link->getDatabase() . "'
+                AND column_name LIKE 'tx_mask_%'
+                GROUP BY table_name
+                ";
 
         $statement = $link->prepare($sql);
-        $statement->execute();
+        $result = $statement->execute();
 
-        while ($row = $statement->fetch(FetchMode::ASSOCIATIVE)) {
+        while ($row = $result->fetchAssociative()) {
             return $row['columns'];
         }
     }
