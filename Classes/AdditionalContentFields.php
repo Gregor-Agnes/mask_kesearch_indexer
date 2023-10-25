@@ -76,7 +76,7 @@ class AdditionalContentFields
                     $bodytext .= strip_tags($ttContentRow[$column]);
                 } elseif ($ttContentRow[$column] && is_array($ttContentRow)) {
                     // it's a dependend table, index the columns from the dependent table
-                    $maskColumnsOfDependentTable = preg_split('/,/', $this->getMaskFieldsFromTable($column), null, PREG_SPLIT_NO_EMPTY);
+                    $maskColumnsOfDependentTable = preg_split('/,/', $this->getMaskFieldsFromTable($column), -1, PREG_SPLIT_NO_EMPTY);
                     if ($maskColumnsOfDependentTable) {
                         $bodytext = $this->getContentFromMaskFields($ttContentRow['pid'], $column, $maskColumnsOfDependentTable, $ttContentRow['sys_language_uid']);
                     }
