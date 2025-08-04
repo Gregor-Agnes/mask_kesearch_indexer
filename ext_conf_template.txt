@@ -1,0 +1,2 @@
+# cat=general; type=string; label=Ignore list of fields (comma separated)
+ignore_list =

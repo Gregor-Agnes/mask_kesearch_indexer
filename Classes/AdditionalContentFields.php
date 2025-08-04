@@ -25,7 +25,7 @@ use Doctrine\DBAL\FetchMode;
 use Tpwd\KeSearch\Lib\Db;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 
 /**
  * Class AdditionalContentFields
@@ -47,6 +47,22 @@ class AdditionalContentFields
     {
         // get the mask fields (columns) from tt_content
         $this->maskColumns = $this->getMaskFieldsFromTable();
+
+        $extConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('mask_kesearch_indexer');
+
+        $ignoreList = array_map(
+            'trim',
+            explode(',', $extConf['ignore_list'] ?? '')
+        );
+
+        if ($ignoreList) {
+            $maskColArr = array_filter(
+                explode(',', $this->maskColumns),
+                static fn($value) => ! in_array($value, $ignoreList, true)
+            );
+
+            $this->maskColumns = implode(',', $maskColArr);
+        }
     }
 
     /**
