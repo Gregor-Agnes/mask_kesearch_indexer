@@ -48,6 +48,7 @@ class AdditionalContentFields
         // get the mask fields (columns) from tt_content
         $this->maskColumns = $this->getMaskFieldsFromTable();
 
+        // update mask fields based on the ignore list
         $extConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('mask_kesearch_indexer');
 
         $ignoreList = array_map(
